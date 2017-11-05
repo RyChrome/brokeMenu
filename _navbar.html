@@ -1,0 +1,116 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">brokemenu</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    {% if auth %}
+                        <a class="nav-link" href="https://www.linkedin.com/in/ryan-d-501946125/">My account
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    {% else %}
+                        <a class="nav-link" href="{{ url_for('login') }}" id="loginButton">Log In
+                            <span class="sr-only">(current)</span>
+                        </a>
+
+                        <a class="nav-link" href="{{ url_for('signup') }}" id="loginButton">Sign Up
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% if session['user_email'] %}
+<p class="login-box">You are already logged in. There is nothing much you can do over here right now.</p>
+{% else %}
+<form id="loginForm" method="post" class="form-horizontal" style="display: none;">
+
+    {{ form.hidden_tag() }}
+    <p class="email">Email: {{ form.email(size=20) }}</p>
+    {% if form.email.errors %}
+	    <ul class=errors>
+	    {% for error in form.email.errors %}
+	      <li class = "error">{{ error }}</li>
+	    {% endfor %}
+	    </ul>
+    {% endif %}
+    <p> Password: {{ form.password(size=20, type = "password") }}</p>
+    {% if form.password.errors %}
+	    <ul class=errors>
+	    {% for error in form.password.errors %}
+	      <li class = "error">{{ error }}</li>
+	    {% endfor %}
+	    </ul>
+    {% endif %}
+    <button><a href="{{ url_for('signup') }}"></a></button>
+{% endif %}
+{#    <div class="form-group">#}
+{#        <label class="col-xs-3 control-label">Username</label>#}
+{#        <div class="col-xs-5">#}
+{#            <input type="text" class="form-control" name="username" />#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <div class="form-group">#}
+{#        <label class="col-xs-3 control-label">Password</label>#}
+{#        <div class="col-xs-5">#}
+{#            <input type="password" class="form-control" name="password" />#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <div class="form-group">#}
+{#        <div class="col-xs-5 col-xs-offset-3">#}
+{#            <button type="submit" class="btn btn-default">Login</button>#}
+{#        </div>#}
+{#    </div>#}
+</form>
+
+
+<script>
+   $(document).ready(function() {
+    /* Login button click handler */
+    $('#loginButton').on('click', function() {
+        bootbox
+            .dialog({
+                title: 'Login',
+                message: $('#loginForm'),
+                show: false /* We will show it manually later */,
+                backdrop: true
+            })
+            .on('shown.bs.modal', function() {
+                $('#loginForm')
+                    .show();                             /* Show the login form */
+            })
+            .on('hide.bs.modal', function(e) {
+                /**
+                 * Bootbox will remove the modal (including the body which contains the login form)
+                 * after hiding the modal
+                 * Therefor, we need to backup the form
+                 */
+                $('#loginForm').hide().appendTo('body');
+            })
+            .modal('show');
+    });
+});
+
+   var quill = new Quill('#editor-container', {
+  modules: {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline'],
+      ['image', 'code-block']
+    ]
+  },
+  placeholder: 'Compose an epic...',
+  theme: 'snow'  // or 'bubble'
+});
+
+</script>
+
